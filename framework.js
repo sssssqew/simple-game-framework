@@ -1,3 +1,4 @@
+// helper function
 function getDist(x1, y1, x2, y2){
   return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))
 }
@@ -70,6 +71,27 @@ function collisionRectAndCircle(circle, rect){
   }
 }
 
+// Color
+function Color(r, g, b, a){
+  this.r = 255;
+  this.g = 255;
+  this.b = 255;
+  this.a = 1;
+  
+  if(!isNull(r)) this.r = r;
+  if(!isNull(g)) this.g = g;
+  if(!isNull(b)) this.b = b;
+  if(!isNull(a)) this.a = a;
+
+  this.ToStandard = function(noAlpha){
+    if(isNull(noAlpha)){
+      return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+    }else{
+      return `rgb(${this.r}, ${this.g}, ${this.b})`;
+    }
+  }
+}
+
 // create rectangle
 function Rectangle(x, y, w, h){
   if(isNull(x) || isNull(y) || isNull(w) || isNull(h)){
@@ -79,6 +101,8 @@ function Rectangle(x, y, w, h){
   this.y = y;
   this.w = w;
   this.h = h;
+
+  this.color = new Color();
 
   this.collideWithCircle = function(shape){
     return collisionRectAndCircle(shape, this);
@@ -117,8 +141,8 @@ function Rectangle(x, y, w, h){
     return isContainX(x, this.x, this.w) && isContainY(y, this.y, this.h);
   }
 
-  this.Draw = function(ctx, color){
-    ctx.fillStyle = color;
+  this.Draw = function(ctx){
+    ctx.fillStyle = this.color.ToStandard();
     ctx.fillRect(this.x, this.y, this.w, this.h);
   }
 }
@@ -152,4 +176,118 @@ function Circle(x, y, r){
     ctx.fill();
   }
 }
+
+Array.prototype.Remove = function(arg, all){
+  for(var i=0; i<this.length; i++){
+    if(this[i] == arg){
+      this.splice(i, 1);
+
+      if(isNull(all)) break; // arg 값을 한번만 제거함
+      // all == true 이면 arg 값과 일치하는 모든 값을 제거함
+      else i--; // 배열 요소들이 왼쪽으로 이동하므로 검색 위치 i도 왼쪽으로 위치 이동
+    } 
+  }
+}
+
+Array.prototype.RemoveAt = function(position){
+  this.splice(position, 1);
+}
+
+Array.prototype.Clear = function(){
+  this.length = 0;
+}
+
+Array.prototype.InsertAt = function(arg, position){
+  var arr1 = this.slice(0, position);
+  var arr2 = this.slice(position);
+
+  this.Clear();
+
+  for(var i=0; i<arr1.length; i++){
+    this.push(arr1[i]);
+  }
+
+  this.push(arg)
+
+  for(var j=0; j<arr2.length; j++){
+    this.push(arr2[j]);
+  }
+
+}
+
+Array.prototype.Contains = function(arg){
+  for(var i=0; i<this.length; i++){
+    if(this[i]==arg) return true;
+  }
+  return false;
+}
+
+Array.prototype.Occurs = function(arg){
+  var counter = 0;
+  for(var i=0; i<this.length; i++){
+    if(this[i]==arg) counter++;
+  }
+  return counter;
+}
+
+// vector 2d
+function Vector2(x, y){
+  this.x = 0;
+  this.y = 0;
+
+  // 현재 입력된 좌표로 초기화
+  if(!isNull(x)) this.x = x;
+  if(!isNull(y)) this.y = y;
+
+  this.prevX = 0;
+  this.prevY = 0;
+
+  // 현재 입력된 좌표로 업데이트
+  this.Set = function(x, y){
+    if(isNull(x) && isNull(y)){
+      console.log("No 'x' or 'y' has been passed to Vector2's Set function")
+    }else{
+      this.prevX = this.x;
+      this.prevY = this.y;
+      if(!isNull(x)) this.x = x;
+      if(!isNull(y)) this.y = y;
+    }
+  }
+  this.Normalize = function(){
+    var tmp = new Vector2(this.x, this.y);
+    var mag = Math.sqrt((tmp.x * tmp.x) + (tmp.y * tmp.y));
+    tmp.x = tmp.x / mag;
+    tmp.y = tmp.y / mag;
+
+    return tmp;
+  }
+
+  // vec2 지점과의 거리 계산
+  this.Distance = function(vec2){
+    if(!isNull(vec2)){
+      var dx = vec2.x - this.x;
+      var dy = vec2.y - this.y;
+    }else{
+      var dx = this.prevX - this.x;
+      var dy = this.prevY - this.y;
+    }
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  this.HasChanged = function(){
+    return (this.x != this.prevX || this.y != this.prevY)
+  }
+  // vec2 지점과의 차이 벡터
+  this.Difference = function(vec2, invert){
+    var inv = 1;
+    if(invert) inv = -1;
+
+    if(!isNull(vec2)){
+      return new Vector2((this.x - vec2.x)*inv, (this.y - vec2.y)*inv)
+    }else{
+      return new Vector2((this.x - this.prevX)*inv, (this.y - this.prevY)*inv)
+    }
+  }
+}
+
+
 
