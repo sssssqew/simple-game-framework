@@ -113,6 +113,10 @@ function Rectangle(x, y, w, h){
     }
   }
 
+  this.Contains = function(x, y){
+    return isContainX(x, this.x, this.w) && isContainY(y, this.y, this.h);
+  }
+
   this.Draw = function(ctx, color){
     ctx.fillStyle = color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
