@@ -8,43 +8,54 @@ var offset = canvas.getBoundingClientRect();
 
 var ctx = canvas.getContext('2d');
 
-var rect = new Rectangle(15, 15, 50, 50);
-rect.color = new Color(255, 0, 0, 1);
-var rect2 = new Rectangle(80, 15, 50, 50);
-rect2.color = new Color(0, 0, 255, 1);
-var rect3 = new Rectangle(150, 15, 50, 50);
-rect3.color = new Color(0, 255, 0, 1);
-var rect4 = new Rectangle(25, 25, 50, 50);
-rect4.color = new Color(0, 0, 255, 0.5);
+// var rect = new Rectangle(15, 15, 50, 50);
+// rect.color = new Color(255, 0, 0, 1);
+// var rect2 = new Rectangle(80, 15, 50, 50);
+// rect2.color = new Color(0, 0, 255, 1);
+// var rect3 = new Rectangle(150, 15, 50, 50);
+// rect3.color = new Color(0, 255, 0, 1);
+// var rect4 = new Rectangle(25, 25, 50, 50);
+// rect4.color = new Color(0, 0, 255, 0.5);
 
-var movement = -1;
+// var movement = -1;
 
-var img = new Image();
-img.src = 'https://img.favpng.com/7/11/22/super-mario-bros-2-drawing-vector-graphics-png-favpng-HDMKBpxHNx3x8mtb7gUman45j.jpg';
+// var img = new Image();
+// img.src = 'https://img.favpng.com/7/11/22/super-mario-bros-2-drawing-vector-graphics-png-favpng-HDMKBpxHNx3x8mtb7gUman45j.jpg';
 
-var tmpArr = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 3, 3, 3);
+// var tmpArr = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 3, 3, 3, 3);
 
-var str = '';
-for(var i=0; i<tmpArr.length; i++){
-  str += tmpArr[i];
-}
+// var str = '';
+// for(var i=0; i<tmpArr.length; i++){
+//   str += tmpArr[i];
+// }
 
-alert(tmpArr.Occurs(3));
+// alert(tmpArr.Occurs(3));
+
+// 8은 마리오가 2번째 줄까지 왼쪽으로 이동하는 애니메이션이기 때문에
+var anim = new Animation(16, 16, 0, 0, 8, 'mario.png', 12, 4, 5)
+anim.position.Set(50, 50);
+
+setInterval(() => {
+  anim.Update()
+}, 1);
 
 setInterval(function(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  rect.Draw(ctx);
-  rect2.Draw(ctx);
-  rect3.Draw(ctx);
-  rect4.Draw(ctx);
+  // anim.Update()
+  anim.Draw(ctx)
 
-  rect2.x += movement;
+  // rect.Draw(ctx);
+  // rect2.Draw(ctx);
+  // rect3.Draw(ctx);
+  // rect4.Draw(ctx);
 
-  ctx.drawImage(img, 0, 0, 820, 913, 180, 180, 50, 50);
+  // rect2.x += movement;
 
-  if(rect2.collideWithRect(rect) || rect2.collideWithRect(rect3)){
-    movement *= -1;
-  }
+  // ctx.drawImage(img, 0, 0, 820, 913, 180, 180, 50, 50);
+
+  // if(rect2.collideWithRect(rect) || rect2.collideWithRect(rect3)){
+  //   movement *= -1;
+  // }
   // alert(rect.collideWithRect(rect2))
 }, 33)
 

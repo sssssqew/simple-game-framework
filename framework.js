@@ -92,6 +92,96 @@ function Color(r, g, b, a){
   }
 }
 
+function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows){
+  if(isNull(fps) || fps >= 33){
+    this.fps = 1;
+  }else{
+    this.fps = 33 / fps;
+  }
+  this.fpsCounter = 0;
+  this.frame = 0;
+  this.width = width;
+  this.height = height;
+  this.rowStart = row;
+  this.columnStart = column;
+  this.row = row;
+  this.column = column;
+  this.rows = rows;
+  this.columns = columns;
+  if(isNull(limit) || limit === 0){
+    this.limit = 9999999
+  }else{
+    this.limit = limit - 1;
+  }
+  this.limitCount = 0;
+  this.image = new Image();
+  this.image.src = imgSrc;
+  this.position = new Vector2(0);
+  this.cropPosition = new Vector2(0);
+
+  this.SetLimit = function(limit){
+    this.limit = limit - 1;
+  }
+  this.SetRow = function(num){
+    this.row = num;
+    this.rowStart = num;
+  }
+  this.SetColumn = function(num){
+    this.column = num;
+    this.columnStart = num;
+  }
+  // 캔버스에 그려야할 위치를 이동시킨다
+  this.Update = function(pos){
+    if(!isNull(pos)){
+      this.position = pos;
+    }
+    
+    this.cropPosition.x = this.width * this.column;
+    this.cropPosition.y = this.height * this.row;
+
+    if(isNull(this.columns) || this.columns === 0){
+      this.columns = this.image.width / this.width;    
+    }
+    if(isNull(this.rows) || this.rows === 0){
+      this.rows = this.image.height / this.height;
+    }
+  }
+  this.Draw = function(ctx){
+    // 스프라이트 애니메이션 위치를 이동시킨다 (다른 그림을 선택한다)
+    if(this.fpsCounter === 0){
+      if(this.limitCount < this.limit){
+        this.limitCount++;
+        this.column++;
+
+        if(this.column >= this.columns){
+          this.row++;
+          this.column = 0;
+
+          if(this.row >= this.rows){
+            this.row = this.rowStart;
+            this.column = this.columnStart;
+            this.limitCount = 0;
+          }
+        }
+      }else{
+        this.column = this.columnStart;
+        this.row = this.rowStart;
+        this.limitCount = 0;
+      }
+    }
+    // 변경한 애니메이션 그린다
+    ctx.drawImage(this.image, this.cropPosition.x, this.cropPosition.y, this.width, this.height, 
+                    this.position.x, this.position.y, this.width, this.height);
+    
+    // fps가 33이면 33번동안 같은 동작 그리고 다시 그림 변경하고 다시 33번동안 그린다
+    this.fpsCounter++;
+    if(this.fpsCounter >= this.fps){
+      this.fpsCounter = 0;
+    }
+
+  }
+}
+
 // create rectangle
 function Rectangle(x, y, w, h){
   if(isNull(x) || isNull(y) || isNull(w) || isNull(h)){
@@ -235,9 +325,14 @@ function Vector2(x, y){
   this.x = 0;
   this.y = 0;
 
-  // 현재 입력된 좌표로 초기화
-  if(!isNull(x)) this.x = x;
-  if(!isNull(y)) this.y = y;
+  if(!isNull(x) && isNull(y)){
+    this.x = x;
+    this.y = x;
+  }else{
+      // 현재 입력된 좌표로 초기화
+    if(!isNull(x)) this.x = x;
+    if(!isNull(y)) this.y = y;
+  }
 
   this.prevX = 0;
   this.prevY = 0;
@@ -249,8 +344,14 @@ function Vector2(x, y){
     }else{
       this.prevX = this.x;
       this.prevY = this.y;
-      if(!isNull(x)) this.x = x;
-      if(!isNull(y)) this.y = y;
+
+      if(!isNull(x) && isNull(y)){
+        this.x = x;
+        this.y = x;
+      }else{
+        if(!isNull(x)) this.x = x;
+        if(!isNull(y)) this.y = y;
+      }
     }
   }
   this.Normalize = function(){
