@@ -131,10 +131,7 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
     this.columnStart = num;
   }
   // 캔버스에 그려야할 위치를 이동시킨다
-  this.Update = function(pos){
-    if(!isNull(pos)){
-      this.position = pos;
-    }
+  this.Update = function(){
     
     this.cropPosition.x = this.width * this.column;
     this.cropPosition.y = this.height * this.row;
@@ -179,6 +176,278 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
       this.fpsCounter = 0;
     }
 
+  }
+}
+
+Input = function(){
+  this.a = false;
+  this.b = false;
+  this.c = false;
+  this.d = false;
+  this.e = false;
+  this.f = false;
+  this.g = false;
+  this.h = false;
+  this.i = false;
+  this.j = false;
+  this.k = false;
+  this.l = false;
+  this.m = false;
+  this.n = false;
+  this.o = false;
+  this.p = false;
+  this.q = false;
+  this.r = false;
+  this.s = false;
+  this.t = false;
+  this.u = false;
+  this.v = false;
+  this.w = false;
+  this.x = false;
+  this.y = false;
+  this.z = false;
+  this.left = false;
+  this.right = false;
+  this.up = false;
+  this.down = false;
+  this.enter = false;
+  this.space = false;
+  this.mouseIsDown = false;
+  this.mousePosition = new Vector2(0);
+  this.offset = new Vector2(0); // 캔버스와 스크린 top, left 위치가 다를수 있기 때문에 캔버스 위치는 offset으로 지정함
+  this.clamp = new Vector2(0);
+
+
+}
+var inputs = new Input()
+
+document.documentElement.onmousemove = function(e){
+  e = e || window.event;
+
+  inputs.mousePosition.x = e.clientX  - inputs.offset.x; // 브라우저 기준 좌표에서 캔버스 좌측 상단 모서리점 좌표만큼 빼줘야 캔버스기준 좌표가 된다
+  inputs.mousePosition.y = e.clientY  - inputs.offset.y;
+}
+
+document.documentElement.onmousedown = function(e){
+  inputs.mouseIsDown = true;
+}
+
+document.documentElement.onmouseup = function(e){
+  inputs.mouseIsDown = false;
+}
+
+document.documentElement.onkeydown = function(e){
+  var keycode;
+  if(window.event){
+    keycode = window.event.keyCode;
+  }else if(e){
+    keycode = e.which;
+  }
+  
+  switch(keycode){
+    case 13:
+      inputs.enter = true;
+      break;
+    case 32:
+      inputs.space = true;
+      break;
+    case 37:
+      inputs.left = true;
+      break;
+    case 38:
+      inputs.up = true;
+      break;
+    case 39:
+      inputs.right = true;
+      break;
+    case 40:
+      inputs.down = true;
+      break;
+    case 65:
+      inputs.a = true;
+      break;
+    case 66:
+      inputs.b = true;
+      break;
+    case 67:
+      inputs.c = true;
+      break;
+    case 68:
+      inputs.d = true;
+      break;
+    case 69:
+      inputs.e = true;
+      break;
+    case 70:
+      inputs.f = true;
+      break;
+    case 71:
+      inputs.g = true;
+      break;
+    case 72:
+      inputs.h = true;
+      break;
+    case 73:
+      inputs.i = true;
+      break;
+    case 74:
+      inputs.j = true;
+      break;
+    case 75:
+      inputs.k = true;
+      break;
+    case 76:
+      inputs.l = true;
+      break;
+    case 77:
+      inputs.m = true;
+      break;
+    case 78:
+      inputs.n = true;
+      break;
+    case 79:
+      inputs.o = true;
+      break;
+    case 80:
+      inputs.p = true;
+      break;
+    case 81:
+      inputs.q = true;
+      break;
+    case 82:
+      inputs.r = true;
+      break;
+    case 83:
+      inputs.s = true;
+      break;
+    case 84:
+      inputs.t = true;
+      break;
+    case 85:
+      inputs.u = true;
+      break;
+    case 86:
+      inputs.v = true;
+      break;
+    case 87:
+      inputs.w = true;
+      break;
+    case 88:
+      inputs.x = true;
+      break;
+    case 89:
+      inputs.y = true;
+      break;
+    case 90:
+      inputs.z = true;
+      break;
+  }
+}
+
+document.documentElement.onkeyup = function(e){
+  var keycode;
+  if(window.event){
+    keycode = window.event.keyCode;
+  }else if(e){
+    keycode = e.which;
+  }
+  switch(keycode){
+    case 13:
+      inputs.enter = false;
+      break;
+    case 32:
+      inputs.space = false;
+      break;
+    case 37:
+      inputs.left = false;
+      break;
+    case 38:
+      inputs.up = false;
+      break;
+    case 39:
+      inputs.right = false;
+      break;
+    case 40:
+      inputs.down = false;
+      break;
+    case 65:
+      inputs.a = false;
+      break;
+    case 66:
+      inputs.b = false;
+      break;
+    case 67:
+      inputs.c = false;
+      break;
+    case 68:
+      inputs.d = false;
+      break;
+    case 69:
+      inputs.e = false;
+      break;
+    case 70:
+      inputs.f = false;
+      break;
+    case 71:
+      inputs.g = false;
+      break;
+    case 72:
+      inputs.h = false;
+      break;
+    case 73:
+      inputs.i = false;
+      break;
+    case 74:
+      inputs.j = false;
+      break;
+    case 75:
+      inputs.k = false;
+      break;
+    case 76:
+      inputs.l = false;
+      break;
+    case 77:
+      inputs.m = false;
+      break;
+    case 78:
+      inputs.n = false;
+      break;
+    case 79:
+      inputs.o = false;
+      break;
+    case 80:
+      inputs.p = false;
+      break;
+    case 81:
+      inputs.q = false;
+      break;
+    case 82:
+      inputs.r = false;
+      break;
+    case 83:
+      inputs.s = false;
+      break;
+    case 84:
+      inputs.t = false;
+      break;
+    case 85:
+      inputs.u = false;
+      break;
+    case 86:
+      inputs.v = false;
+      break;
+    case 87:
+      inputs.w = false;
+      break;
+    case 88:
+      inputs.x = false;
+      break;
+    case 89:
+      inputs.y = false;
+      break;
+    case 90:
+      inputs.z = false;
+      break;
   }
 }
 
@@ -353,6 +622,11 @@ function Vector2(x, y){
         if(!isNull(y)) this.y = y;
       }
     }
+  }
+
+  this.Move = function(vec2){
+    this.x += vec2.x;
+    this.y += vec2.y;
   }
   this.Normalize = function(){
     var tmp = new Vector2(this.x, this.y);
