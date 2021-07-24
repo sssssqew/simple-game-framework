@@ -6,6 +6,7 @@ canvas.style.width = canvas.width + 'px';
 canvas.style.height = canvas.height + 'px';
 inputs.offset = new Vector2(GetLeft(canvas), GetTop(canvas)); // 캔버스 좌표 구하기
 
+// 충돌 시뮬레이션
 var rect = new Rectangle(250, 250, 50, 50);
 rect.color = new Color(0, 0, 255, 1);
 
