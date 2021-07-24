@@ -1,4 +1,22 @@
 // helper function
+function GetLeft(elm){
+  var left = elm.offsetLeft;
+  while(elm = elm.offsetParent){
+    left += elm.offsetLeft;
+  }
+  left -= window.pageXOffset; //  스크롤바 때문에
+  return left;
+}
+
+function GetTop(elm){
+  var top = elm.offsetTop;
+  while(elm = elm.offsetParent){
+    top += elm.offsetTop;
+  }
+  top -= window.pageYOffset; //  스크롤바 때문에
+  return top;
+}
+
 function getDist(x1, y1, x2, y2){
   return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))
 }
