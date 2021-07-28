@@ -110,6 +110,8 @@ function Color(r, g, b, a){
   }
 }
 
+// fps : 값이 작을수록 애니메이션이 더 빨리 움직인다 (이미지가 더 빨리 바뀐다)
+// limit : 연속된 애니메이션 중에서 몇개를 선택할지 결정한다 (마리오 이미지는 8개가 한 셋트다) - 왼쪽 동작 8개 오른쪽 동작 8개
 function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows){
   if(isNull(fps) || fps >= 33){
     this.fps = 1;
@@ -118,8 +120,10 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
   }
   this.fpsCounter = 0;
   this.frame = 0;
-  this.width = width;
-  this.height = height;
+  this.width = width; // 애니메이션 그림의 기본폭
+  this.height = height; // 애니메이션 그림의 기본높이
+  this.sizeWidth = width; // 캔버스에 보여주는 그림의 폭
+  this.sizeHeight = height; // 캔버스에 보여주는 그림의 높이
   this.rowStart = row;
   this.columnStart = column;
   this.row = row;
@@ -140,15 +144,29 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
   this.SetLimit = function(limit){
     this.limit = limit - 1;
   }
+
+  // 연속된 이미지에서 특정 이미지를 선택한다
   this.SetRow = function(num){
     this.row = num;
     this.rowStart = num;
+
+    this.cropPosition.x = this.width * this.column;
+    this.cropPosition.y = this.height * this.row;
   }
+  // 연속된 이미지에서 특정 이미지를 선택한다
   this.SetColumn = function(num){
     this.column = num;
     this.columnStart = num;
+
+    this.cropPosition.x = this.width * this.column;
+    this.cropPosition.y = this.height * this.row;
   }
-  // 캔버스에 그려야할 위치를 이동시킨다
+  this.SetSize = function(w, h){
+    this.sizeWidth = w;
+    this.sizeHeight = h;
+  }
+  // 스프라이트 애니메이션 위치를 이동시킨다 (다른 그림 또는 다른 동작을 선택한다)
+  // Draw 함수에 의해 row, column 값이 계속 변경되면서 연속된 이미지 중에서 특정 이미지로 계속 바뀐다 (cropPosition)
   this.Update = function(){
     
     this.cropPosition.x = this.width * this.column;
@@ -162,7 +180,7 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
     }
   }
   this.Draw = function(ctx){
-    // 스프라이트 애니메이션 위치를 이동시킨다 (다른 그림을 선택한다)
+    // 1프레임마다 row, column 값을 변경한다
     if(this.fpsCounter === 0){
       if(this.limitCount < this.limit){
         this.limitCount++;
@@ -184,11 +202,12 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
         this.limitCount = 0;
       }
     }
-    // 변경한 애니메이션 그린다
+    // 변경한 위치에 애니메이션 이미지를 그린다
     ctx.drawImage(this.image, this.cropPosition.x, this.cropPosition.y, this.width, this.height, 
-                    this.position.x, this.position.y, this.width, this.height);
+                    this.position.x, this.position.y, this.sizeWidth, this.sizeHeight);
     
-    // fps가 33이면 33번동안 같은 동작 그리고 다시 그림 변경하고 다시 33번동안 그린다
+    // fps가 33이면 33번동안 같은 동작을 그린 후에 다음 동작을 33번동안 그린다
+    // 즉 33ms (30프레임)마다 한번씩 동작을 변경한다
     this.fpsCounter++;
     if(this.fpsCounter >= this.fps){
       this.fpsCounter = 0;
