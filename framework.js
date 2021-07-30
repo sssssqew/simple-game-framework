@@ -116,7 +116,7 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
   if(isNull(fps) || fps >= 33){
     this.fps = 1;
   }else{
-    this.fps = 33 / fps;
+    this.fps = 33 / fps; // this.fps 값이 작을수록 마리오가 빨리 움직인다 (애니메이션이 빨리 바뀐다)
   }
   this.fpsCounter = 0;
   this.frame = 0;
@@ -161,6 +161,7 @@ function Animation(width, height, row, column, limit, imgSrc, fps, columns, rows
     this.cropPosition.x = this.width * this.column;
     this.cropPosition.y = this.height * this.row;
   }
+  // 캔버스 화면에 보여줄 애니메이션 그림의 크기 설정
   this.SetSize = function(w, h){
     this.sizeWidth = w;
     this.sizeHeight = h;
