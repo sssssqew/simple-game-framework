@@ -4,9 +4,25 @@ canvas.style.width = canvas.width + 'px';
 canvas.style.height = canvas.height + 'px';
 inputs.offset = new Vector2(GetLeft(canvas), GetTop(canvas)); // 캔버스 좌표 구하기
 
-var gameSound = new Audio('./mario-song.mp3') // 게임 사운드 재생
-gameSound.loop = true;
-gameSound.play();
+var enable = false;
+
+function hideBtn(){
+  document.getElementById('play-sound').hidden = true;
+}
+function playSound(){
+  var gameSound = new Audio('./mario-song.mp3'); // 게임 사운드 재생
+  gameSound.loop = true;
+  gameSound.play();
+}
+function enablePlayer(){
+  enable = true;
+}
+function playGame(){
+  hideBtn();
+  playSound();
+  enablePlayer();
+}
+document.getElementById('play-sound').addEventListener('click', playGame);
 
 var player = new Player();
 
@@ -24,7 +40,7 @@ for(var i = 0; i<floor.length; i++){
 }
 
 var Update = setInterval(function(){
-  player.Update()
+  if(enable) player.Update()
 
   var collided = false;
   for(var i=0; i<floor.length; i++){
@@ -51,6 +67,6 @@ var Draw = setInterval(function(){
   for(var i = 0; i<floor.length; i++){
     floor[i].Draw(ctx);
   }
-  player.Draw(ctx);
+  if(enable) player.Draw(ctx);
 }, 33)
 
