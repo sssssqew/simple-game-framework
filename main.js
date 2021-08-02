@@ -4,6 +4,10 @@ canvas.style.width = canvas.width + 'px';
 canvas.style.height = canvas.height + 'px';
 inputs.offset = new Vector2(GetLeft(canvas), GetTop(canvas)); // 캔버스 좌표 구하기
 
+var gameSound = new Audio('./mario-song.mp3') // 게임 사운드 재생
+gameSound.loop = true;
+gameSound.play();
+
 var player = new Player();
 
 var floor = new Array();
@@ -34,7 +38,10 @@ var Update = setInterval(function(){
   if(!collided){ // 땅에 닿아있지 않은 경우에는 점프가 불가능하게 함
     player.jumpAvailable = false;
   }
-
+  // 캔버스 좌우를 벗어나지 않게 함
+  if(player.rect.x + player.width < inputs.offset.x){
+    player.SetPosition(inputs.offset.x)
+  }
 
 }, 1);
 

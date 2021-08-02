@@ -54,8 +54,6 @@ function Player(){
       this.rect.y += this.gravity; // 점프해서 가장 높은 지점에서 내려오는 경우
     }
 
-    
-
     // 애니메이션 이미지를 그릴 위치를 업데이트된 사각형 좌표로 설정한다
     // 어디에 이미지를 그릴 것인가? 현재 사각형 좌표에 그린다
     this.animation.position.Set(this.rect.x, this.rect.y) // 현재 사각형 위치에 이미지를 그린다 (사각형 위치를 이미지를 그릴 위치로 설정한다) - drawImage (x, y) 포인트
