@@ -29,17 +29,17 @@ function Player(){
   this.Update = function(){
     this.moving = false;
 
-    if(inputs.a){
+    if(inputs.a || inputs.left){
       this.animation.SetRow(2);
-      this.rect.x -= 1;
+      this.rect.x -= 0.5;
       this.moving = true;
     } 
-    if(inputs.d){
+    if(inputs.d || inputs.right){
       this.animation.SetRow(0);
       this.rect.x += 0.5;
       this.moving = true;
     } 
-    if(inputs.w){
+    if(inputs.w || inputs.space){
       this.Jump();
     }
     if(this.jumping){ // 땅에 닿아있을때 w키를 누른경우
