@@ -5,12 +5,13 @@ canvas.style.height = canvas.height + 'px';
 inputs.offset = new Vector2(GetLeft(canvas), GetTop(canvas)); // 캔버스 좌표 구하기
 
 var enable = false;
+var gameSound = null;
 
 function hideBtn(){
-  document.getElementById('play-sound').hidden = true;
+  document.getElementById('start-game').hidden = true;
 }
 function playSound(){
-  var gameSound = new Audio('./mario-song.mp3'); // 게임 사운드 재생
+  gameSound = new Audio('./mario-song.mp3'); // 게임 사운드 재생
   gameSound.loop = true;
   gameSound.play();
 }
@@ -22,7 +23,17 @@ function playGame(){
   playSound();
   enablePlayer();
 }
-document.getElementById('play-sound').addEventListener('click', playGame);
+function endGame(){
+  gameSound.pause();
+  gameSound.currentTime = 0;
+}
+function startGame(){
+  if(inputs.s){
+    document.getElementById('start-game').click()
+  }
+}
+
+document.getElementById('start-game').addEventListener('click', playGame);
 
 var player = new Player();
 
@@ -40,6 +51,7 @@ for(var i = 0; i<floor.length; i++){
 }
 
 var Update = setInterval(function(){
+  if(!enable) startGame() // s key 클릭시 게임 시작
   if(enable) player.Update()
 
   var collided = false;
@@ -57,6 +69,13 @@ var Update = setInterval(function(){
   // 캔버스 좌우를 벗어나지 않게 함
   if(player.rect.x + player.width < inputs.offset.x){
     player.SetPosition(inputs.offset.x)
+  }
+  // 마리오 죽음후 다시 시작하기
+  if(player.rect.y > inputs.offset.y + canvas.height){
+    endGame()
+    alert('Game over! \n You want to restart game?')
+    clearInterval(Update);
+    location.reload()
   }
 
 }, 1);
